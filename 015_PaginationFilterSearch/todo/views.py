@@ -12,18 +12,21 @@ from .paginations import (
 )
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 class TodoView(ModelViewSet):
-    queryset = Todo.objects.all()
+    queryset = Todo.objects.all().order_by('-id') # Default ordering
     serializer_class = TodoSerializer
     pagination_class = CustomPageNumberPagination # Local Pagination Setting.
     # Filtrelem Modülleri:
-    filter_backends = [DjangoFilterBackend, SearchFilter] # Local Filter Setting.
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter] # Local Filter Setting.
     # Filter: Birebir eşleştirme:
     filterset_fields = ['id', 'priority', 'is_done'] # for django_filters module
     # Search: İçinde arama:
+    # https://www.django-rest-framework.org/api-guide/filtering/#searchfilter
     search_fields = ['title', 'description']
+    # Ordering: Sıralama:
+    ordering_fields = ['id', 'title'] # '__all__'
 
     # Alternatif (sadece bu class için çalışan) yöntem:
     # pagination_class = PageNumberPagination
